@@ -64,5 +64,14 @@ namespace KeyManager.Database
                     "WHERE rowid = @Id;", new {Id = id});
             }
         }
+
+        public IEnumerable<KeyRecord> FetchDuplicatedKey()
+        {
+            using (var connection = new SqliteConnection(_databaseConfig.ConnectionString))
+            {
+                return connection.Query<KeyRecord>(
+                    "SELECT Id, Name, Key, Note FROM DuplicateKeyRecords;");
+            }
+        }
     }
 }

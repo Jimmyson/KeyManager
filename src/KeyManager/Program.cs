@@ -40,6 +40,7 @@ namespace KeyManager
                 Console.WriteLine("2.) Add a Key");
                 Console.WriteLine("3.) Edit a Key");
                 Console.WriteLine("4.) Delete a Key");
+                Console.WriteLine("7.) List Duplicate Keys");
                 Console.WriteLine("9.) Exit");
                 Console.WriteLine();
                 Console.Write("Enter an option: ");
@@ -59,6 +60,9 @@ namespace KeyManager
                     case "4":
                         DeleteKey();
                         break;
+                    case "7":
+                        PrintDuplicatedKeys();
+                        break;
                     case "9":
                         active = false;
                         break;
@@ -75,6 +79,26 @@ namespace KeyManager
         static void PrintAllKeys()
         {
             var keys = _keyRecordRepo.GetAll();
+
+            if (keys.Any())
+            {
+                foreach (var key in keys)
+                {
+                    Console.WriteLine($"ID: {key.Id.ToString().PadRight(keys.Select(x => x.Id.ToString().Length).Max())} | Name: {key.Name.PadRight(keys.Select(x => x.Name.Length).Max())} | Key: {key.Key}");
+                    if (!string.IsNullOrWhiteSpace(key.Note))
+                        Console.WriteLine("- Note: " + key.Note);
+                }
+            }
+            else
+            {
+                Console.WriteLine("No records found...");
+            }
+            Console.WriteLine();
+        }
+
+        static void PrintDuplicatedKeys()
+        {
+            var keys = _keyRecordRepo.FetchDuplicatedKey();
 
             if (keys.Any())
             {
